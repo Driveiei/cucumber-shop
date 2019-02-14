@@ -18,20 +18,20 @@ public class BuyStepdefs {
         order = new Order();
     }
 
-    @Given("a product (.+) with price (.+) exists")
-    public void a_product_with_price_exists(String name, double price) {
-        catalog.addProduct(name, price);
+    @Given("a product (.+) with price (.+) with quantity (.+) on the shelves")
+    public void a_product_with_price_with_quantity_on_the_shelves(String name, double price, int quant) {
+        catalog.addProduct(name, price, quant);
     }
 
-    @When("I buy (.+) with quantity (.+)")
-    public void i_buy_with_quantity(String name, int quant) {
+    @When("Customer buy (.+) with quantity (.+)")
+    public void customer_buy_with_quantity(String name, int quant) {
         Product prod = catalog.getProduct(name);
         order.addItem(prod, quant);
+        catalog.getProduct(name).updateQuantity(quant);
     }
 
-    @Then("total should be (.+)")
-    public void total_should_be(double total) {
-        assertEquals(total, order.getTotal());
+    @Then("a product (.+) on the shelves must remain (.+) left")
+    public void a_product_on_the_shelves_must_remain_left(String name, int remain) {
+        assertEquals(remain, catalog.getProduct(name).getRemain());
     }
 }
-
